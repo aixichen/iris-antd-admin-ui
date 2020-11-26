@@ -1,3 +1,5 @@
+
+import { OptionType } from '@/services/data';
 import { request } from 'umi';
 import { TableListParams, TableListItem } from './data.d';
 
@@ -7,6 +9,33 @@ export const createApi:string="/api/auth/setting/user/create";
 export const updateApi:string="/api/auth/setting/user/update";
 export const roleApi:string="/api/auth/setting/user/role";
 export const officeApi:string="/api/auth/setting/user/office";
+
+const userIsDisableOption: OptionType[] = [
+  {
+    label: '禁止登录',
+    value: 1,
+  },
+  {
+    label: '允许登录',
+    value: 2,
+  },
+];
+
+const userTypeOption: OptionType[] = [
+  {
+    label: '客户',
+    value: 1,
+  },
+  {
+    label: '平台',
+    value: 2,
+  },
+  {
+    label: '金融',
+    value: 3,
+  },
+];
+
 
 export async function query(params?: TableListParams) {
   return request(listApi, {
@@ -49,4 +78,13 @@ export async function update(params: TableListItem) {
       method: 'update',
     },
   });
+}
+
+
+export async function getIsDisableOption() {
+  return userIsDisableOption;
+}
+
+export async function getUserTypeOption() {
+  return userTypeOption;
 }

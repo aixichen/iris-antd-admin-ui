@@ -47,6 +47,7 @@
     "antd": "^4.7.0",
     "classnames": "^2.2.6",
     "lodash": "^4.17.11",
+    "lrz": "^4.9.41",
     "moment": "^2.25.3",
     "nzh": "^1.0.3",
     "omit.js": "^2.0.2",
@@ -96,5 +97,15 @@
   },
   "engines": {
     "node": ">=10.0.0"
+  },
+  "lint-staged": {
+    "*.{js}": [
+      "eslint --cache --fix",
+      "prettier --write"
+    ],
+    "*.css": [
+      "stylelint --cache --fix",
+      "prettier --write"
+    ]
   }
 }

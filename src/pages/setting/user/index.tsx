@@ -369,73 +369,39 @@ const TableList: React.FC<{}> = () => {
         </FooterToolbar>
       )}
       {proTableContainer && createModalVisible ? (
-        <CreateForm onCancel={() => handleModalVisible(false)} modalVisible={createModalVisible} container={proTableContainer}>
-          <ProTable<TableListItem, TableListItem>
-            onSubmit={async (value) => {
-
-              let user_office_name = ""
-              if (officeSelect) {
-                const tempOfficeSelectIndex = officeSelect.findIndex(item => item.value === value.user_office_id);
-                if (tempOfficeSelectIndex >= 0) {
-                  user_office_name = officeSelect[tempOfficeSelectIndex].label;
-                }
-              }
-
-              const tempValue: TableListItem = {
-                ...value,
-                user_office_name
-              }
-              const success = await handleAdd(tempValue);
-              if (success) {
-                handleModalVisible(false);
-                if (actionRef.current) {
-                  actionRef.current.reload();
-                }
-              }
-            }}
-            rowKey="key"
-            type="form"
-            columns={columns}
-          />
-        </CreateForm>
+         <CreateForm
+         onCancel={() => handleModalVisible(false)}
+         modalVisible={createModalVisible}
+         container={proTableContainer}
+         onSubmit={async (value) => {
+           const success = await handleAdd(value);
+           if (success) {
+             handleModalVisible(false);
+             if (actionRef.current) {
+               actionRef.current.reload();
+             }
+           }
+         }}
+       />
       ) : null}
 
-      {proTableContainer && updateModalVisible && stepFormValues && updateRef ? (
-        <UpdateForm onCancel={() => handleUpdateModalVisible(false)} updateModalVisible={updateModalVisible} value={stepFormValues} updateRef={updateRef} >
-
-          <ProTable<TableListItem, TableListItem>
-            onSubmit={async (value) => {
-
-              let user_office_name = ""
-              if (officeSelect) {
-                const tempOfficeSelectIndex = officeSelect.findIndex(item => item.value === value.user_office_id);
-                if (tempOfficeSelectIndex >= 0) {
-                  user_office_name = officeSelect[tempOfficeSelectIndex].label;
-                }
-              }
-
-
-              const tempValue: TableListItem = {
-                ...value,
-                id: stepFormValues.id,
-                user_office_name
-              }
-
-              const success = await handleUpdate(tempValue);
-              if (success) {
-                handleModalVisible(false);
-                if (actionRef.current) {
-                  actionRef.current.reload();
-                }
-              }
-            }}
-            rowKey="key"
-            type="form"
-            formRef={updateRef}
-            columns={columns}
-
-          />
-        </UpdateForm>
+      {proTableContainer && updateModalVisible && stepFormValues ? (
+         <UpdateForm
+         onCancel={() => handleUpdateModalVisible(false)}
+         modalVisible={updateModalVisible}
+         container={proTableContainer}
+         values={stepFormValues}
+         onSubmit={async (value) => {
+       
+           const success = await handleUpdate(value);
+           if (success) {
+             handleUpdateModalVisible(false);
+             if (actionRef.current) {
+               actionRef.current.reload();
+             }
+           }
+         }}
+       />
       ) : null}
       {proTableContainer ? (
         <Drawer

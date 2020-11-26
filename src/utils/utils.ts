@@ -1,3 +1,5 @@
+import lrz from 'lrz';
+
 /* eslint no-useless-escape:0 import/prefer-default-export:0 */
 const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
 
@@ -40,5 +42,45 @@ export function getAuthToken() {
 export function setAuthToken(authority:string) {
   const proAuthority = authority;
   return localStorage.setItem('antd-pro-auth-token', JSON.stringify(proAuthority));
+}
+
+
+export function getApiServer() {
+  const config = {
+    development: {
+      API_SERVER: 'http://127.0.0.1:8080',
+    },
+    test: {
+      API_SERVER: 'http://ccb.car-helper.com',
+    },
+    production: {
+      API_SERVER: '',
+    },
+  };
+  let resultStr=""
+  if (process.env.NODE_ENV){
+    resultStr=config[process.env.NODE_ENV].API_SERVER;
+  }
+  return resultStr;
+}
+
+
+export async function imageFileCompression(file:any) {
+  const isLt1M = file.size / 1024 / 1024 < 1;
+  if (!isLt1M) {
+    const compressedFiles = await lrz(file, { quality: 0.1 })
+      .then((rst:any) => {
+        const originFile = rst.origin;
+        const { file: compressionFile } = rst;
+        compressionFile.uid = originFile.uid;
+        compressionFile.name = originFile.name;
+        return { file: compressionFile };
+      })
+      .catch(() => {
+        return { file };
+      });
+    return compressedFiles.file;
+  }
+  return true;
 }
 
